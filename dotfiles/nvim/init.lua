@@ -1,0 +1,4 @@
+-- Coloque aqui sua config real do Neovim (init.lua, lua/, etc).
+-- Este arquivo é só um placeholder para o repo não ficar vazio.
+-- Tudo dentro de dotfiles/nvim/ é linkado automaticamente para
+-- ~/.config/nvim pelo módulo home/modules/neovim.nix
