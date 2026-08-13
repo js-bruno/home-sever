@@ -18,6 +18,7 @@
     dysk
     btop
     fastfetch
+    lazygit
     tree
     ncdu
   ];
