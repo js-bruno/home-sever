@@ -1,10 +1,10 @@
 { pkgs, ... }:
 {
   programs.neovim = {
-    enable = true;
-    defaultEditor = true;
-    viAlias = true;
-    vimAlias = true;
+    enable = false;
+    defaultEditor = false;
+    viAlias = false;
+    vimAlias = false;
   };
 
   # se você já tem uma config própria (init.lua, lua/, etc),
