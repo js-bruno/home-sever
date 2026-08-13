@@ -7,6 +7,7 @@
   imports = [
     ./modules/zsh.nix
     ./modules/neovim.nix
+    ./modules/vim.nix
     ./modules/git.nix
   ];
 
