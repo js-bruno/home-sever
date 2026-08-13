@@ -5,7 +5,5 @@
   ];
 
   # extras específicos do servidor, se houver
-  home.packages = with pkgs; [ 
-    vim
-  ];
+  home.packages = with pkgs; [ ];
 }
