@@ -22,7 +22,7 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.${server_user} = {
+            home-manager.users.${desktop_user} = {
               imports = [ ./home/common.nix ./home/desktop.nix ];
             };
           }
@@ -39,7 +39,7 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.${desktop_user} = {
+            home-manager.users.${server_user} = {
               imports = [ ./home/common.nix ./home/server.nix ];
             };
           }

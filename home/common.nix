@@ -3,8 +3,6 @@
   programs.home-manager.enable = true;
 
   home.stateVersion = "26.05";
-  home.username = "gipsydanger";
-  home.homeDirectory = "/home/gipsydanger";
 
   imports = [
     ./modules/zsh.nix
