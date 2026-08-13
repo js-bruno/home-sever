@@ -1,5 +1,7 @@
 { config, pkgs, ... }:
 {
+  programs.home-manager.enable = true;
+
   home.stateVersion = "24.05";
   home.username = "seuusuario";
   home.homeDirectory = "/home/seuusuario";
@@ -11,14 +13,13 @@
   ];
 
   home.packages = with pkgs; [
-    ripgrep
-    fd
-    bat
-    fzf
+    git
+    wget
+    curl
+    dysk
+    btop
+    fastfetch
     tree
-    htop
   ];
 
-  # deixa o home-manager se gerenciar sozinho
-  programs.home-manager.enable = true;
 }
