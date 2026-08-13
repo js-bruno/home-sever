@@ -34,14 +34,14 @@
     isNormalUser = true;
     description = "Only user in this machine";
     extraGroups = [ "networkmanager" "wheel" ];
-    shell = pkgs.zsh;
+    shell = pkgs.bash;
 
     #openssh.authorizedKeys.keys = [
       # "ssh-ed25519 AAAAC3Nza... voce@desktop"
     #];
   };
 
-  programs.zsh.enable = true;
+  #programs.zsh.enable = true;
 
   services.openssh = {
     enable = true;
