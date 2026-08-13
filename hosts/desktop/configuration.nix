@@ -26,5 +26,5 @@
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
 
-  system.stateVersion = "24.05";
+  system.stateVersion = "26.05";
 }

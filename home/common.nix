@@ -2,9 +2,9 @@
 {
   programs.home-manager.enable = true;
 
-  home.stateVersion = "24.05";
-  home.username = "seuusuario";
-  home.homeDirectory = "/home/seuusuario";
+  home.stateVersion = "26.05";
+  home.username = "gipsydanger";
+  home.homeDirectory = "/home/gipsydanger";
 
   imports = [
     ./modules/zsh.nix
@@ -20,6 +20,7 @@
     btop
     fastfetch
     tree
+    ncdu
   ];
 
 }
