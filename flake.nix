@@ -11,7 +11,7 @@
     nix-minecraft.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }:
+  outputs = { self, nixpkgs, home-manager, nix-minecraft, ... }:
   let
     system = "x86_64-linux";
 
