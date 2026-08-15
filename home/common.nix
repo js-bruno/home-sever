@@ -9,7 +9,6 @@
     ./modules/neovim.nix
     ./modules/vim.nix
     ./modules/git.nix
-    ./modules/minecraft_forge_server.nix
   ];
 
   home.packages = with pkgs; [
