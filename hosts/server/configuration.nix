@@ -17,7 +17,7 @@
     };
     defaultGateway = "192.168.15.1";
     nameservers = [ "1.1.1.1" "8.8.8.8" ];
-    firewall.allowedTCPPorts = [ 2222 19999];
+    firewall.allowedTCPPorts = [ 25565 2222 19999];
     networkmanager.enable = false;
   };
 
