@@ -42,7 +42,7 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.${server_user} = {
-              imports = [ ./home/common.nix ./home/server.nix ];
+              imports = [ ./home/modules/minecraft_forge_server.nix ./home/common.nix ./home/server.nix ];
             };
           }
       ];
