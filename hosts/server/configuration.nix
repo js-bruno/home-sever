@@ -3,6 +3,7 @@
   imports = [
     ./hardware-configuration.nix
   ];
+  nixpkgs.config.allowUnfree = true;
 
   networking = {
     hostName = "shatterdome";
