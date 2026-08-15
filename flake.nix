@@ -11,7 +11,7 @@
     nix-minecraft.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, home-manager, nix-minecraft, ... }:
+  outputs = { self, nixpkgs, home-manager, nix-minecraft, ... }@inputs:
   let
     system = "x86_64-linux";
 
@@ -35,14 +35,18 @@
     server_user = "gipsydanger";
     server_config = nixpkgs.lib.nixosSystem {
       inherit system;
+      specialArgs = { inherit inputs; };
       modules = [
         ./hosts/server/configuration.nix
+          ./home/modules/minecraft_forge_server.nix
+          nix-minecraft.nixosModules.minecraft-servers
+          { nixpkgs.overlays = [ nix-minecraft.overlay ]; }
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.${server_user} = {
-              imports = [ ./home/modules/minecraft_forge_server.nix ./home/common.nix ./home/server.nix ];
+              imports = [ ./home/common.nix ./home/server.nix ];
             };
           }
       ];
