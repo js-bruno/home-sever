@@ -12,6 +12,7 @@
   ];
 
   home.packages = with pkgs; [
+    zoxide
     git
     wget
     curl

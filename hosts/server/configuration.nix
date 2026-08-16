@@ -1,8 +1,5 @@
-{ config, pkgs, lib, ... }:
-{
-  imports = [
-    ./hardware-configuration.nix
-  ];
+{ config, pkgs, lib, ... }: { imports = [
+./hardware-configuration.nix ];
   nixpkgs.config.allowUnfree = true;
 
   networking = {
@@ -35,7 +32,7 @@
     isNormalUser = true;
     description = "Only user in this machine";
     extraGroups = [ "networkmanager" "wheel" ];
-    shell = pkgs.bash;
+    shell = pkgs.zsh;
 
     #openssh.authorizedKeys.keys = [
       # "ssh-ed25519 AAAAC3Nza... voce@desktop"
