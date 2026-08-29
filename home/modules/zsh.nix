@@ -14,7 +14,11 @@
     };
 
     shellAliases = {
+      v = "vim";
+      vi = "vim";
       ll = "ls -la";
+      c = "clear";
+      cd = "z";
       gs = "git status";
       gc = "git commit";
       ".." = "cd ..";
@@ -22,7 +26,7 @@
 
     oh-my-zsh = {
       enable = true;
-      theme = "robbyrussell";
+      theme = "crunch";
       plugins = [ "git" "sudo" "docker" ];
     };
 
@@ -36,6 +40,6 @@
 
   programs.zoxide = {
     enable = true;
-    enableZshIntegration = true; # isso te dá o comando "z"
+    enableZshIntegration = true;
   };
 }

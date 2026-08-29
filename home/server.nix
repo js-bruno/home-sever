@@ -5,5 +5,7 @@
   ];
 
   # extras específicos do servidor, se houver
-  home.packages = with pkgs; [ ];
+  home.packages = with pkgs; [ 
+    iw
+  ];
 }

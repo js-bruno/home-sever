@@ -2,7 +2,6 @@
 " There was a town where the people known as Happyfolk lived
 " Their very existence a mystery to the rest of the world
 " Obscured as it was by great clouds
-"
 " Here they played out their peaceful lives
 " Innocent of the litany of excess and violence
 " That was growing in the world below
@@ -96,5 +95,14 @@ call plug#begin('~/.vim/plugged')
 
 
 Plug 'tpope/vim-vinegar'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+
+let mapleader = " "
+nnoremap <SPACE> <NOP>
+
+nnoremap <leader>f :Files<CR>
+nnoremap <leader>e :Buffers<CR>
+nnoremap <C-t> :Rg<CR>
 
 call plug#end()

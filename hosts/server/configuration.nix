@@ -2,10 +2,12 @@
 ./hardware-configuration.nix ];
   nixpkgs.config.allowUnfree = true;
 
+  programs.zsh.enable = true;
+
   networking = {
     hostName = "shatterdome";
     useDHCP = false;
-    interfaces.enp2s0 = {
+    interfaces.enp3s0 = {
       useDHCP = false;
       ipv4.addresses = [{
         address = "192.168.15.50";
@@ -16,6 +18,10 @@
     nameservers = [ "1.1.1.1" "8.8.8.8" ];
     firewall.allowedTCPPorts = [ 25565 2222 19999];
     networkmanager.enable = false;
+    wireless = {
+      enable = true;
+      interfaces = [ "wlp2s0" ];
+    };
   };
 
   boot.loader.systemd-boot.enable = true;
@@ -39,7 +45,6 @@
     #];
   };
 
-  #programs.zsh.enable = true;
 
   services.openssh = {
     enable = true;
