@@ -104,5 +104,7 @@ nnoremap <SPACE> <NOP>
 nnoremap <leader>f :Files<CR>
 nnoremap <leader>e :Buffers<CR>
 nnoremap <C-t> :Rg<CR>
+nnoremap <leader><Tab> :tabnew<CR>
+nnoremap <Tab> :tabNext<CR>
 
 call plug#end()
