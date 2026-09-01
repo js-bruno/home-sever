@@ -16,7 +16,7 @@
     };
     defaultGateway = "192.168.15.1";
     nameservers = [ "1.1.1.1" "8.8.8.8" ];
-    firewall.allowedTCPPorts = [ 25565 2222 19999];
+    firewall.allowedTCPPorts = [ 80 443 2096 3306 25565 2222 19999];
     networkmanager.enable = false;
     wireless = {
       enable = true;
@@ -46,6 +46,16 @@
   };
 
 
+  services.mysql = {
+    package = pkgs.mariadb;
+    enable = true;
+    ensureDatabases = ["habbo"];
+    ensureUsers = [{
+      name = "habbo";
+      ensurePermissions = { "habbo.*" = "ALL PRIVILEGES"; };
+    }];
+  };
+
   services.openssh = {
     enable = true;
     settings = {
@@ -71,4 +81,40 @@
 
   console.keyMap = "br-abnt2";
   system.stateVersion = "26.05";
+
+  services.phpfpm.pools.habbo = {
+    user = "nginx";
+    settings = {
+      "pm" = "dynamic";
+      "pm.max_children" = "5";
+      "pm.start_servers" = "2";
+      "pm.min_spare_servers" = "1";
+      "pm.max_spare_servers" = "3";
+    };
+  };
+  
+  services.nginx = {
+    enable = true;
+    recommendedGzipSettings = true;
+    recommendedOptimisation = true;
+    recommendedProxySettings = true;
+
+    virtualHosts."caravelho.com.br" = { # Substitua "_" pelo seu domínio se houver
+    root = "/var/www/habbo/public"; # Raiz pública da CMS
+
+    locations."/" = {
+      index = "index.php index.html";
+      tryFiles = "$uri $uri/ /index.php?$query_string";
+    };
+
+    locations."~ \\.php$" = {
+      extraConfig = ''
+        fastcgi_pass unix:${config.services.phpfpm.pools.habbo.socket};
+        fastcgi_index index.php;
+        include ${pkgs.nginx}/conf/fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+      '';
+    };
+    };
+  };
 }

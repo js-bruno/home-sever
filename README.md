@@ -77,3 +77,30 @@ sudo nixos-generate-config --show-hardware-config > hosts/nova-maquina/hardware-
 # adicione "nova-maquina" em flake.nix, igual desktop/server
 sudo nixos-rebuild switch --flake .#nova-maquina
 ```
+
+[ Navegador do Usuário (Cliente) ]
+       │                   │
+       │ (1) HTTP/HTTPS    │ (4) WebSocket (ws://)
+       │                   │
+       ▼                   ▼
++---------------------------------------------------+
+|                      NGINX                        |
+| - Serve Nitro Client (HTML/JS) e Assets (Imagens) |
+| - Proxy reverso para o WebSocket (Opcional)       |
++---------------------------------------------------+
+       │
+       │ (2) FastCGI
+       ▼
++-----------------------+       +------------------------------------+
+|     CMS (PHP-FPM)     |       |         Arcturus Emulator          |
+| - Portal de login     |       | - Servidor backend em Java         |
+| - Gera o SSO Ticket   |       | - Gerencia o jogo e conexões TCP   |
++-----------------------+       +------------------------------------+
+       │                                           │
+       │ (3) Leitura/Escrita PDO                   │ (5) Conexão JDBC
+       ▼                                           ▼
++---------------------------------------------------+
+|               MariaDB (Porta 3306)                |
+| - Armazena usuários, quartos, tokens SSO          |
+| - Contém a tabela emulator_settings               |
++---------------------------------------------------+
