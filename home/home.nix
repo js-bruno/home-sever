@@ -1,15 +1,11 @@
+
 { config, pkgs, ... }:
 {
   programs.home-manager.enable = true;
 
   home.stateVersion = "26.05";
 
-  imports = [
-    ./modules/zsh.nix
-    ./modules/neovim.nix
-    ./modules/vim.nix
-    ./modules/git.nix
-  ];
+  imports = [ ./modules ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
