@@ -2,6 +2,8 @@
 ./hardware-configuration.nix ];
   nixpkgs.config.allowUnfree = true;
 
+  programs.zsh.enable = true;
+
   networking = {
     hostName = "shatterdome";
     useDHCP = false;
@@ -14,7 +16,7 @@
     };
     defaultGateway = "192.168.15.1";
     nameservers = [ "1.1.1.1" "8.8.8.8" ];
-    firewall.allowedTCPPorts = [ 80 443 2096 3306 25565 2222 19999];
+    firewall.allowedTCPPorts = [ 8082 80 443 2096 3306 25565 2222 19999 28981];
     networkmanager.enable = false;
     wireless = {
       enable = true;
@@ -43,10 +45,40 @@
     #];
   };
 
+  services.glance = {
+    enable = true;
+    settings = {
+      server = {
+        port = 8082;
+        host ="0.0.0.0";
+      };
+      pages = [{
+        name = "Homelab";
+        columns = [
+          {
+            size = "full";
+            widgets = [
+              {
+                type = "monitor";
+                title = "Serviços";
+                sites = [
+                  { title = "Netdata"; url = "http://192.168.15.50:19999"; }
+                  { title = "Paperless"; url = "http://192.168.15.50:28981"; }
+                ];
+              }
+            ];
+          }
+        ];
+      }];
+    };
+  };
+
+
   services.paperless = {
     enable = true;
     consumptionDirIsPublic = true;
-    address = "192.168.15.50";
+    address = "0.0.0.0";
+    port = 28981;
     settings = {
       PAPERLESS_CONSUMER_IGNORE_PATTERN = [
         ".DS_STORE/*"
