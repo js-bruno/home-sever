@@ -2,8 +2,6 @@
 ./hardware-configuration.nix ];
   nixpkgs.config.allowUnfree = true;
 
-  programs.zsh.enable = true;
-
   networking = {
     hostName = "shatterdome";
     useDHCP = false;
@@ -45,6 +43,23 @@
     #];
   };
 
+  services.paperless = {
+    enable = true;
+    consumptionDirIsPublic = true;
+    address = "192.168.15.50";
+    settings = {
+      PAPERLESS_CONSUMER_IGNORE_PATTERN = [
+        ".DS_STORE/*"
+          "desktop.ini"
+      ];
+      PAPERLESS_OCR_LANGUAGE = "deu+eng";
+      PAPERLESS_OCR_USER_ARGS = {
+        optimize = 1;
+        pdfa_image_compression = "lossless";
+      };
+      PAPERLESS_URL = "https://paperless.example.com";
+    };
+  };
 
   services.mysql = {
     package = pkgs.mariadb;
