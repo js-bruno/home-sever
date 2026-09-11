@@ -1,4 +1,4 @@
-{...}: {
+{ config, pkgs, lib, ... }: {
   services.nginx = {
     enable = true;
     recommendedGzipSettings = true;
@@ -23,5 +23,4 @@
       };
     };
   };
-
-       }
+}

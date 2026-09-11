@@ -20,6 +20,17 @@
     lazygit
     tree
     ncdu
+    iw
+
+    # DEV DEPENDENCIES
+    jdk17 #java
+    maven
+
+    php83
+    php83Packages.composer
+
+    nodejs_24
+    yarn
   ];
 
 }

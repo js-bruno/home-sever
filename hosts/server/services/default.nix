@@ -1,6 +1,6 @@
 { ... }:
 {
-  import = [
+  imports = [
     ./ssh.nix
     ./nginx.nix
     ./minecraft.nix
