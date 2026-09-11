@@ -78,11 +78,12 @@
             }
             {
               type = "rss";
-              title = "NixOS Discourse";
+              title = "NixOS";
               limit = 8;
               collapse-after = 5;
               feeds = [
               { url = "https://discourse.nixos.org/posts.rss"; }
+              { url = "https://github.com/NixOS/nixpkgs/commits/master.atom"; }
               ];
             }
             ];
@@ -98,8 +99,7 @@
               type = "releases";
               cache = "1d";
               repositories = [
-                "NixOS/nixpkgs"
-                  "Infinidoge/nix-minecraft"
+                "Infinidoge/nix-minecraft"
               ];
             }
             ];
