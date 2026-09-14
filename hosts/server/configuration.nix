@@ -30,16 +30,6 @@
     #];
   };
 
-  services.mysql = {
-    package = pkgs.mariadb;
-    enable = true;
-    ensureDatabases = ["habbo"];
-    ensureUsers = [{
-      name = "habbo";
-      ensurePermissions = { "habbo.*" = "ALL PRIVILEGES"; };
-    }];
-  };
-
   services.xserver.enable = true;
   services.xserver.displayManager.lightdm.enable = true;
   services.xserver.desktopManager.mate.enable = true;
