@@ -7,6 +7,7 @@
     ./paperless.nix
     ./glance.nix
     ./netdata.nix
+    ./hermes.nix
   ];
 }
 
