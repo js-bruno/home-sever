@@ -21,7 +21,6 @@
     tree
     ncdu
     iw
-    opencode
 
     # DEV DEPENDENCIES
     jdk17 #java
