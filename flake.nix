@@ -8,10 +8,9 @@
     };
     nix-minecraft.url = "github:Infinidoge/nix-minecraft";
     nix-minecraft.inputs.nixpkgs.follows = "nixpkgs";
-    hermes-agent.url = "github:NousResearch/hermes-agent";
   };
 
-  outputs = { self, nixpkgs, home-manager, nix-minecraft, hermes-agent, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nix-minecraft, ... }@inputs:
   let
     system = "x86_64-linux";
     server_user = "gipsydanger";
@@ -20,7 +19,6 @@
       specialArgs = { inherit inputs; };
       modules = [
           ./hosts/server/configuration.nix
-          hermes-agent.nixosModules.default
           nix-minecraft.nixosModules.minecraft-servers
           { nixpkgs.overlays = [ nix-minecraft.overlay ]; }
           home-manager.nixosModules.home-manager
