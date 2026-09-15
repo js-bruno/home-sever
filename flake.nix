@@ -6,11 +6,12 @@
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    hermes-agent.url = "github:NousResearch/hermes-agent";
     nix-minecraft.url = "github:Infinidoge/nix-minecraft";
     nix-minecraft.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, home-manager, nix-minecraft, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, hermes-agent, nix-minecraft, ... }@inputs:
   let
     system = "x86_64-linux";
     server_user = "gipsydanger";
@@ -26,7 +27,10 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.${server_user} = {
-              imports = [ ./home/home.nix ];
+              imports = [
+                ./home/home.nix
+                hermes-agent.homeManagerModules.default
+              ];
             };
           }
       ];

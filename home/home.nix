@@ -2,6 +2,7 @@
 { config, pkgs, ... }:
 {
   programs.home-manager.enable = true;
+  programs.hermes-agent.enable = true;
 
   home.stateVersion = "26.05";
 
