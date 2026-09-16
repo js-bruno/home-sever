@@ -16,11 +16,17 @@
       locations."~ \\.php$" = {
         extraConfig = ''
           fastcgi_pass unix:${config.services.phpfpm.pools.habbo.socket};
-        fastcgi_index index.php;
-        include ${pkgs.nginx}/conf/fastcgi_params;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+          fastcgi_index index.php;
+          include ${pkgs.nginx}/conf/fastcgi_params;
+          fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         '';
       };
     };
   };
+
+  # O CMS vive em ~/projects/habbo-dev → /var/www/habbo (symlink).
+  # O systemd do NixOS aplica ProtectHome=true no nginx por padrão, o que
+  # bloqueia a leitura de /home mesmo com permissões corretas. Desativamos
+  # para o vhost do habbo conseguir servir o public do Laravel.
+  systemd.services.nginx.serviceConfig.ProtectHome = lib.mkForce false;
 }
