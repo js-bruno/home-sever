@@ -44,6 +44,7 @@
 
   services.phpfpm.pools.habbo = {
     user = "nginx";
+    group = "nginx";
     phpPackage = pkgs.php85;
     settings = {
       "pm" = "dynamic";
@@ -51,6 +52,9 @@
       "pm.start_servers" = "2";
       "pm.min_spare_servers" = "1";
       "pm.max_spare_servers" = "3";
+      "listen.owner" = "nginx";
+      "listen.group" = "nginx";
+      "listen.mode" = "0660";
     };
   };
 }
