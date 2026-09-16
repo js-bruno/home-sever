@@ -22,6 +22,7 @@
   users.users.gipsydanger = {
     isNormalUser = true;
     description = "Only user in this machine";
+    homeMode = "755";
     extraGroups = [ "networkmanager" "wheel" ];
     shell = pkgs.zsh;
 
