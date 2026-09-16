@@ -58,4 +58,10 @@
       "listen.mode" = "0660";
     };
   };
+
+  # O CMS vive em ~/projects/habbo-dev → /var/www/habbo (symlink).
+  # O systemd do NixOS aplica ProtectHome=true no php-fpm por padrão, o que
+  # bloqueia a leitura de /home mesmo com permissões corretas. Desativamos
+  # para o pool do habbo conseguir executar o public do Laravel.
+  systemd.services.phpfpm-habbo.serviceConfig.ProtectHome = lib.mkForce false;
 }
