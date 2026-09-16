@@ -44,6 +44,7 @@
 
   services.phpfpm.pools.habbo = {
     user = "nginx";
+    phpPackage = pkgs.php85;
     settings = {
       "pm" = "dynamic";
       "pm.max_children" = "5";
