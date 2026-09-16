@@ -46,7 +46,7 @@
   services.phpfpm.pools.habbo = {
     user = "nginx";
     group = "nginx";
-    phpPackage = pkgs.php85;
+    phpPackage = pkgs.php85.withExtensions ({ enabled, all }: enabled ++ [ all.pdo_mysql ]);
     settings = {
       "pm" = "dynamic";
       "pm.max_children" = "5";
