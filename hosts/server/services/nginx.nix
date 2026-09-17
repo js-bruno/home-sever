@@ -8,6 +8,20 @@
     virtualHosts."caravelho.com.br" = {
       root = "/var/www/habbo/public";
 
+      # O nitro-react lê /client/renderer-config.json e conecta em socket.url.
+      # O valor é fixo (ws://localhost) no arquivo estático; injetamos o host
+      # real via sub_filter para funcionar por localhost / IP / domínio.
+      locations."= /client/renderer-config.json" = {
+        extraConfig = ''
+          sub_filter_once on;
+          sub_filter 'ws://localhost:2096' 'ws://''${host}:2096';
+          sub_filter 'http://localhost/client/c_images/' 'http://''${host}/client/c_images/';
+          sub_filter 'http://localhost/client/dcr/hof_furni' 'http://''${host}/client/dcr/hof_furni';
+          sub_filter 'http://localhost/client' 'http://''${host}/client';
+          sub_filter_types application/json;
+        '';
+      };
+
       locations."/" = {
         index = "index.php index.html";
         tryFiles = "$uri $uri/ /index.php?$query_string";
