@@ -123,10 +123,21 @@ stream {
 }
 EOF
 
-# include top-level no nginx.conf (junto de http{}), sem duplicar
-if ! grep -q "include /etc/nginx/stream.d/\*.conf;" /etc/nginx/nginx.conf; then
-  sed -i '/^#\?.*http {/i include /etc/nginx/stream.d/*.conf;' /etc/nginx/nginx.conf
-fi
+# include top-level no nginx.conf (junto de http{}), sem duplicar.
+# Usa python3 (certbot já garante na VPS): mais robusto que sed — o sed
+# pode inserir o include DENTRO de http{} se a âncora casar errado, e aí
+# stream{}/server fica ilegal ("server directive is not allowed here").
+python3 - <<'PY'
+import re
+p = "/etc/nginx/nginx.conf"
+s = open(p).read()
+# remove qualquer include antigo do stream.d (qualquer posição)
+s = re.sub(r"include /etc/nginx/stream\.d/\*\.conf;\s*\n?", "", s)
+if "http {" in s:
+    # insere no main context, imediatamente antes do bloco http
+    s = s.replace("http {", "include /etc/nginx/stream.d/*.conf;\nhttp {", 1)
+open(p, "w").write(s)
+PY
 
 nginx -t
 systemctl enable --now nginx
