@@ -99,23 +99,25 @@ rm -f /etc/nginx/sites-enabled/default
 
 # ---------------------------------------------------------------------------
 # 3. nginx stream TCP 2096 -> websocket Nitro (10.88.88.2:2096)
-#    O client conecta em ws://habbo.<dominio>:2096
+#    O client conecta em ws://<sub>.<dominio>:2096
+#    IMPORTANTE: o bloco stream{} NÃO pode ficar em conf.d (lá é incluído
+#    dentro de http{}). Usamos /etc/nginx/stream.d/ + include no nginx.conf.
+#    O módulo no Debian é libnginx-mod-stream (nginx-extras é legado).
 # ---------------------------------------------------------------------------
-cat > /etc/nginx/conf.d/stream-habbo-ws.conf <<EOF
-stream {
-    server {
-        listen 2096;
-        proxy_pass 10.88.88.2:2096;
-        proxy_timeout 24h;
-    }
+apt-get install -y libnginx-mod-stream || echo "AVISO: falhou instalar libnginx-mod-stream"
+
+mkdir -p /etc/nginx/stream.d
+cat > /etc/nginx/stream.d/habbo-ws.conf <<EOF
+server {
+    listen 2096;
+    proxy_pass 10.88.88.2:2096;
+    proxy_timeout 24h;
 }
 EOF
-# stream{} precisa do módulo stream carregado
-if ! nginx -t 2>&1 | grep -q "unknown directive \"stream\""; then
-  : # ok, module presente
-else
-  # Debian/Ubuntu: o nginx padrão traz stream; se não, instala nginx-extras
-  apt-get install -y nginx-extras || echo "AVISO: nginx sem módulo stream — ws 2096 não vai expor"
+
+# include top-level no nginx.conf (junto de http{}), se ainda não existir
+if ! grep -q "stream.d/\*.conf" /etc/nginx/nginx.conf; then
+  sed -i '/^#\?.*http {/i include /etc/nginx/stream.d/*.conf;' /etc/nginx/nginx.conf
 fi
 
 nginx -t
