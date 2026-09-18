@@ -1,8 +1,17 @@
+# nix-config — configuração do servidor gipsydanger (shatterdome)
+#
+# O stack Habbo Retro (Arcturus + Atom CMS + Nitro) é declarado pelo flake
+# externo habbo-nixos (github:js-bruno/habbo-retro-nix), importado via
+# nixosModules.habbo (ver ./flake.nix). Isso inclui: services.mysql (bancos
+# habbo+orioncms), habbo-arcturus.service, phpfpm pool 'habbo' com
+# ProtectHome=false, nginx vhost caravelho.com.br com /client/ + sub_filter,
+# usuário 'habbo' e firewall. O que resta aqui é específico deste host.
+
 { config, pkgs, lib, ... }:
-{ 
-  imports = [ 
-    ./hardware-configuration.nix 
-    ./network-local.nix 
+{
+  imports = [
+    ./hardware-configuration.nix
+    ./network-local.nix
     ./services
   ];
 
@@ -42,26 +51,4 @@
   services.fail2ban.enable = true;
   services.netdata.enable = true;
   services.printing.enable = true;
-
-  services.phpfpm.pools.habbo = {
-    user = "nginx";
-    group = "nginx";
-    phpPackage = pkgs.php85.withExtensions ({ enabled, all }: enabled ++ [ all.pdo_mysql ]);
-    settings = {
-      "pm" = "dynamic";
-      "pm.max_children" = "5";
-      "pm.start_servers" = "2";
-      "pm.min_spare_servers" = "1";
-      "pm.max_spare_servers" = "3";
-      "listen.owner" = "nginx";
-      "listen.group" = "nginx";
-      "listen.mode" = "0660";
-    };
-  };
-
-  # O CMS vive em ~/projects/habbo-dev → /var/www/habbo (symlink).
-  # O systemd do NixOS aplica ProtectHome=true no php-fpm por padrão, o que
-  # bloqueia a leitura de /home mesmo com permissões corretas. Desativamos
-  # para o pool do habbo conseguir executar o public do Laravel.
-  systemd.services.phpfpm-habbo.serviceConfig.ProtectHome = lib.mkForce false;
 }
