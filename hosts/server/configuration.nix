@@ -12,6 +12,7 @@
   imports = [
     ./hardware-configuration.nix
     ./network-local.nix
+    ./wireguard-vps.nix
     ./services
   ];
 
