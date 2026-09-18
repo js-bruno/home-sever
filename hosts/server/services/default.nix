@@ -12,5 +12,6 @@
     ./paperless.nix
     ./glance.nix
     ./netdata.nix
+    ./hotel-vhost.nix
   ];
 }

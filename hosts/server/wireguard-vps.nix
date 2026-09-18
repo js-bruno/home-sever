@@ -24,10 +24,10 @@
     peers = [
       {
         # VPS (nginx + proxy reverso)
-        publicKey = "VPS_PUBLIC_KEY_BASE64";
+        publicKey = "bEILjOhsAxTWxlB0di1RzpZAEeUH6ZXn+EV9NP4T9R8=";
         presharedKeyFile = "/etc/wireguard/wg0.psk"; # opcional mas recomendado
         allowedIPs = [ "10.88.88.1/32" ]; # só o IP da VPS — não vaza tráfego
-        endpoint = "SEU_IP_PUBLICO_DA_VPS:51820";
+        endpoint = "191.252.38.145:51820";
         persistentKeepalive = 25; # NAT/firewall da VPS não derrubar o túnel
       }
     ];
