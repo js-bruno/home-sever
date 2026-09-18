@@ -116,7 +116,9 @@ mkdir -p /etc/nginx/stream.d
 cat > /etc/nginx/stream.d/habbo-ws.conf <<EOF
 stream {
     server {
-        listen 2096;
+        listen 2096 ssl;
+        ssl_certificate /etc/letsencrypt/live/${SUB}.${DOMAIN}/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/${SUB}.${DOMAIN}/privkey.pem;
         proxy_pass 10.88.88.2:2096;
         proxy_timeout 24h;
     }
