@@ -1,33 +1,38 @@
 #!/usr/bin/env bash
 # setup-vps-wireguard-nginx.sh — VPS Debian/Ubuntu: WireGuard server + nginx
-# proxy reverso (HTTPS via Let's Encrypt) para serviços do shatterdome.
+# proxy reverso para expor SOMENTE o Habbo/CMS (subdomínio habbo.<dominio>).
+#
+# Todo o resto (Netdata, Glance, Paperless, MySQL, Minecraft, SSH) fica
+# restrito à LAN — o firewall do shatterdome bloqueia o túnel para essas
+# portas (ver hosts/server/wireguard-vps.nix).
+#
+# O que este script cria na VPS:
+#   1. WireGuard server (10.88.88.1/24) + par de chaves p/ o shatterdome
+#   2. nginx HTTP -> http://10.88.88.2:80  (CMS/Habbo web)
+#   3. nginx stream TCP 2096 -> 10.88.88.2:2096  (websocket do client Nitro)
+#   4. HTTPS via Let's Encrypt (habbo.<dominio>)
 #
 # Uso:
-#   sudo bash setup-vps-wireguard-nginx.sh <dominio> <ip-publico-vps> [sub1 sub2 ...]
+#   sudo bash setup-vps-wireguard-nginx.sh <dominio> <ip-publico-vps>
 # Exemplo:
-#   sudo bash setup-vps-wireguard-nginx.sh caravelho.com.br 203.0.113.10 netdata glance paperless
-#
-# Subdomínios criados: netdata.<dominio>, glance.<dominio>, paperless.<dominio> ...
-# (web). O HOTEL pode ser exposto com o sub "habbo" (sem HTTPS, só HTTP, pois
-# o client usa ws:// — veja a seção HABBO no final).
+#   sudo bash setup-vps-wireguard-nginx.sh caravelho.com.br 203.0.113.10
 #
 # Pré-requisitos:
-#   - Domínio com registro A apontando para o IP público da VPS (já feito)
+#   - Registro A de habbo.<dominio> (e <dominio>) apontando pro IP da VPS
 #   - Portas 80, 443 e 51820/udp abertas no firewall da VPS (ufw/security group)
+#   - No shatterdome: wireguard-vps.nix preenchido com as chaves impressas aqui
 
 set -euo pipefail
 
-DOMAIN="${1:?uso: $0 <dominio> <ip-vps> [subdomains...]}"
-VPS_IP="${2:?uso: $0 <dominio> <ip-vps> [subdomains...]}"
-shift 2
-SUBS=("$@")
-[ ${#SUBS[@]} -gt 0 ] || SUBS=(netdata glance paperless)
+DOMAIN="${1:?uso: $0 <dominio> <ip-vps>}"
+VPS_IP="${2:?uso: $0 <dominio> <ip-vps>}"
+SUB="habbo"
 
 # ---------------------------------------------------------------------------
 # 1. WireGuard server
 # ---------------------------------------------------------------------------
 apt-get update -y
-apt-get install -y wireguard nginx certbot python3-certbot-nginx curl
+apt-get install -y wireguard nginx certbot python3-certbot-nginx
 
 WG_DIR=/etc/wireguard
 SERVER_PRIV="$WG_DIR/server_private.key"
@@ -39,11 +44,8 @@ if [ ! -f "$SERVER_PRIV" ]; then
   umask 077
   wg genkey > "$SERVER_PRIV"
   wg pubkey < "$SERVER_PRIV" > "$SERVER_PUB"
-  # Par de chaves PARA O SHATTERDOME (máquina NixOS). Copie estes arquivos
-  # para ~/projects/nix-config? Não: os valores vão no wireguard-vps.nix.
   wg genkey > "$SHATTER_PRIV"
   wg pubkey < "$SHATTER_PRIV" > "$SHATTER_PUB"
-  # PSK compartilhado (opcional mas recomendado)
   wg genpsk > "$WG_DIR/shared.psk"
 fi
 
@@ -52,12 +54,9 @@ cat > "$WG_DIR/wg0.conf" <<EOF
 Address = 10.88.88.1/24
 ListenPort = 51820
 PrivateKey = $(cat "$SERVER_PRIV")
-# Libera forwarding (o nginx da VPS alcança a LAN do servidor)
-PostUp = sysctl -w net.ipv4.ip_forward=1
-PostDown = sysctl -w net.ipv4.ip_forward=0
 
 [Peer]
-# shatterdome (192.168.15.50)
+# shatterdome (192.168.15.50) — único peer
 PublicKey = $(cat "$SHATTER_PUB")
 PresharedKey = $(cat "$WG_DIR/shared.psk")
 AllowedIPs = 10.88.88.2/32
@@ -69,27 +68,17 @@ echo "SERVER_PUBLIC_KEY=$(cat "$SERVER_PUB")"
 echo "SHATTERDOME_PRIVATE_KEY=$(cat "$SHATTER_PRIV")"
 echo "SHATTERDOME_PUBLIC_KEY=$(cat "$SHATTER_PUB")"
 echo "PSK=$(cat "$WG_DIR/shared.psk")"
-echo "-> Copie SHATTERDOME_PRIVATE_KEY e PSK para wireguard-vps.nix (PrivateKeyFile / presharedKeyFile)"
-echo "-> e SERVER_PUBLIC_KEY em publicKey do peer."
+echo "-> No shatterdome: edite hosts/server/wireguard-vps.nix com esses valores"
+echo "   (publicKey = SERVER_PUBLIC_KEY; PrivateKey/PSK em /etc/wireguard/*)"
 
 # ---------------------------------------------------------------------------
-# 2. nginx reverse proxy (vhosts por subdomínio)
+# 2. nginx HTTP -> CMS (10.88.88.2:80)
 # ---------------------------------------------------------------------------
-for sub in "${SUBS[@]}"; do
-  case "$sub" in
-    netdata)  up="http://10.88.88.2:19999";;
-    glance)   up="http://10.88.88.2:8082";;
-    paperless) up="http://10.88.88.2:28981";;
-    habbo)    up="http://10.88.88.2:80";;
-    *)        echo "Subdomínio '$sub' desconhecido — pulei (use netdata/glance/paperless/habbo)"; continue;;
-  esac
-
-  cat > "/etc/nginx/sites-available/${sub}.${DOMAIN}" <<EOF
+cat > "/etc/nginx/sites-available/${SUB}.${DOMAIN}" <<EOF
 server {
     listen 80;
-    server_name ${sub}.${DOMAIN};
+    server_name ${SUB}.${DOMAIN};
 
-    # Headers reais pro app (WebSocket para netdata)
     proxy_http_version 1.1;
     proxy_set_header Host \$host;
     proxy_set_header X-Real-IP \$remote_addr;
@@ -99,38 +88,51 @@ server {
     proxy_set_header Connection "upgrade";
 
     location / {
-        proxy_pass $up;
+        proxy_pass http://10.88.88.2:80;
         proxy_redirect off;
     }
 }
 EOF
-  ln -sf "/etc/nginx/sites-available/${sub}.${DOMAIN}" "/etc/nginx/sites-enabled/${sub}.${DOMAIN}"
-done
-
-# remove default site (evita conflito)
+ln -sf "/etc/nginx/sites-available/${SUB}.${DOMAIN}" "/etc/nginx/sites-enabled/${SUB}.${DOMAIN}"
 rm -f /etc/nginx/sites-enabled/default
+
+# ---------------------------------------------------------------------------
+# 3. nginx stream TCP 2096 -> websocket Nitro (10.88.88.2:2096)
+#    O client conecta em ws://habbo.<dominio>:2096
+# ---------------------------------------------------------------------------
+cat > /etc/nginx/conf.d/stream-habbo-ws.conf <<EOF
+stream {
+    server {
+        listen 2096;
+        proxy_pass 10.88.88.2:2096;
+        proxy_timeout 24h;
+    }
+}
+EOF
+# stream{} precisa do módulo stream carregado
+if ! nginx -t 2>&1 | grep -q "unknown directive \"stream\""; then
+  : # ok, module presente
+else
+  # Debian/Ubuntu: o nginx padrão traz stream; se não, instala nginx-extras
+  apt-get install -y nginx-extras || echo "AVISO: nginx sem módulo stream — ws 2096 não vai expor"
+fi
 
 nginx -t
 systemctl enable --now nginx
 systemctl reload nginx
 
 # ---------------------------------------------------------------------------
-# 3. HTTPS (Let's Encrypt) para os subdomínios
+# 4. HTTPS (Let's Encrypt) — habbo.<dominio>
 # ---------------------------------------------------------------------------
-for sub in "${SUBS[@]}"; do
-  certbot --nginx -d "${sub}.${DOMAIN}" --non-interactive --agree-tos --redirect \
-    -m "admin@${DOMAIN}" || echo "certbot falhou para ${sub}.${DOMAIN} (rede?)"
-done
+certbot --nginx -d "${SUB}.${DOMAIN}" --non-interactive --agree-tos --redirect \
+  -m "admin@${DOMAIN}" || echo "certbot falhou para ${SUB}.${DOMAIN} (rede? verifique o registro A)"
 
-echo "== Pronto =="
-echo "Acesse:"
-for sub in "${SUBS[@]}"; do
-  echo "  https://${sub}.${DOMAIN}"
-done
 echo
-echo "== Se expuser o HABBO (sub 'habbo'): =="
-echo "O client fala ws:// (porta 2096) — o nginx HTTP não proxia WebSocket TCP."
-echo "Opções: a) só LAN; b) expor 2096 via TCP/UDP direto no roteador;"
-echo "c) nginx stream{} na VPS:"
-echo '  stream { server { listen 2096; proxy_pass 10.88.88.2:2096; } }'
-echo "e o client usa ws://habbo.${DOMAIN}:2096 (HABBO-DEV-GUIDE: whitelist)."
+echo "== Pronto =="
+echo "  Web:     https://${SUB}.${DOMAIN}"
+echo "  Websocket: ws://${SUB}.${DOMAIN}:2096  (usado pelo client Nitro)"
+echo
+echo "RELEMBRE no shatterdome (nginx local do CMS):"
+echo "  1. sub_filter do renderer-config.json já troca ws://localhost por \$host"
+echo "  2. websockets.whitelist do plugin precisa incluir ${SUB}.${DOMAIN}"
+echo "  3. Habilitar enc.enabled? Não — só se o client exigir TLS no ws."
