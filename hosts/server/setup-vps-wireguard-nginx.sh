@@ -12,20 +12,20 @@
 #   3. nginx stream TCP 2096 -> 10.88.88.2:2096  (websocket do client Nitro)
 #   4. HTTPS via Let's Encrypt (habbo.<dominio>)
 #
-# Uso:
-#   sudo bash setup-vps-wireguard-nginx.sh <dominio> <ip-publico-vps>
+# Uso (na VPS, com o script baixado — veja README):
+#   sudo bash setup-vps-wireguard-nginx.sh <dominio>
 # Exemplo:
-#   sudo bash setup-vps-wireguard-nginx.sh caravelho.com.br 203.0.113.10
+#   sudo bash setup-vps-wireguard-nginx.sh caravelho.com.br
 #
 # Pré-requisitos:
-#   - Registro A de habbo.<dominio> (e <dominio>) apontando pro IP da VPS
+#   - Registro A de <dominio> e habbo.<dominio> apontando pro IP da VPS
+#     (ex.: registro.br / Cloudflare -> IP público da VPS)
 #   - Portas 80, 443 e 51820/udp abertas no firewall da VPS (ufw/security group)
 #   - No shatterdome: wireguard-vps.nix preenchido com as chaves impressas aqui
 
 set -euo pipefail
 
-DOMAIN="${1:?uso: $0 <dominio> <ip-vps>}"
-VPS_IP="${2:?uso: $0 <dominio> <ip-vps>}"
+DOMAIN="${1:?uso: $0 <dominio>}"
 SUB="habbo"
 
 # ---------------------------------------------------------------------------
