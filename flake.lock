@@ -37,6 +37,26 @@
         "type": "github"
       }
     },
+    "habbo-nixos": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1789740260,
+        "narHash": "sha256-psoHn2pK1H88g6AZ5XjoIqJ663G+hm0NbJR3GvXwt18=",
+        "owner": "js-bruno",
+        "repo": "habbo-retro-nix",
+        "rev": "57111179d64af910b5556785fc515b879df62617",
+        "type": "github"
+      },
+      "original": {
+        "owner": "js-bruno",
+        "repo": "habbo-retro-nix",
+        "type": "github"
+      }
+    },
     "hermes-agent": {
       "inputs": {
         "flake-parts": "flake-parts",
@@ -230,6 +250,7 @@
     },
     "root": {
       "inputs": {
+        "habbo-nixos": "habbo-nixos",
         "hermes-agent": "hermes-agent",
         "home-manager": "home-manager_2",
         "nix-minecraft": "nix-minecraft",
