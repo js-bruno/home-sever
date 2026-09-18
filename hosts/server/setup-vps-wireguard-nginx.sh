@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # setup-vps-wireguard-nginx.sh — VPS Debian/Ubuntu: WireGuard server + nginx
-# proxy reverso para expor SOMENTE o Habbo/CMS (subdomínio habbo.<dominio>).
+# proxy reverso para expor SOMENTE o Habbo/CMS (subdomínio hotel.<dominio>).
 #
 # Todo o resto (Netdata, Glance, Paperless, MySQL, Minecraft, SSH) fica
 # restrito à LAN — o firewall do shatterdome bloqueia o túnel para essas
@@ -10,23 +10,24 @@
 #   1. WireGuard server (10.88.88.1/24) + par de chaves p/ o shatterdome
 #   2. nginx HTTP -> http://10.88.88.2:80  (CMS/Habbo web)
 #   3. nginx stream TCP 2096 -> 10.88.88.2:2096  (websocket do client Nitro)
-#   4. HTTPS via Let's Encrypt (habbo.<dominio>)
+#   4. HTTPS via Let's Encrypt (hotel.<dominio>)
 #
 # Uso (na VPS, com o script baixado — veja README):
-#   sudo bash setup-vps-wireguard-nginx.sh <dominio>
-# Exemplo:
-#   sudo bash setup-vps-wireguard-nginx.sh caravelho.com.br
+#   sudo bash setup-vps-wireguard-nginx.sh <dominio> [sub]
+# Exemplos:
+#   sudo bash setup-vps-wireguard-nginx.sh thisdev.space hotel
+#   sudo bash setup-vps-wireguard-nginx.sh thisdev.space habbo
 #
 # Pré-requisitos:
-#   - Registro A de <dominio> e habbo.<dominio> apontando pro IP da VPS
+#   - Registro A de <sub>.<dominio> apontando pro IP da VPS
 #     (ex.: registro.br / Cloudflare -> IP público da VPS)
 #   - Portas 80, 443 e 51820/udp abertas no firewall da VPS (ufw/security group)
 #   - No shatterdome: wireguard-vps.nix preenchido com as chaves impressas aqui
 
 set -euo pipefail
 
-DOMAIN="${1:?uso: $0 <dominio>}"
-SUB="habbo"
+DOMAIN="${1:?uso: $0 <dominio> [sub]}"
+SUB="${2:-hotel}"
 
 # ---------------------------------------------------------------------------
 # 1. WireGuard server
