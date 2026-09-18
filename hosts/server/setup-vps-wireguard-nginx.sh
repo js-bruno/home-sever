@@ -104,19 +104,22 @@ rm -f /etc/nginx/sites-enabled/default
 #    dentro de http{}). Usamos /etc/nginx/stream.d/ + include no nginx.conf.
 #    O módulo no Debian é libnginx-mod-stream (nginx-extras é legado).
 # ---------------------------------------------------------------------------
-# O bloco stream{} NÃO pode ficar em conf.d (lá é incluído dentro de http{}).
-# Execuções antigas gravavam em conf.d — remova SEMPRE, senão o nginx quebra
-# o test com "unknown directive stream". O restante do nginx.conf (blog,
+# O bloco stream{} NÃO pode ficar em conf.d (lá é incluído dentro de http{});
+# e no main context (stream.d, top-level) `server` só é válido DENTRO de
+# stream{} — SEMPRE com o wrapper. Execuções antigas gravavam em conf.d —
+# remova, senão o nginx quebra o test. O restante do nginx.conf (blog,
 # notes) não é tocado: só o include abaixo é adicionado.
 apt-get install -y libnginx-mod-stream || echo "AVISO: falhou instalar libnginx-mod-stream"
 rm -f /etc/nginx/conf.d/stream-habbo-ws.conf
 
 mkdir -p /etc/nginx/stream.d
 cat > /etc/nginx/stream.d/habbo-ws.conf <<EOF
-server {
-    listen 2096;
-    proxy_pass 10.88.88.2:2096;
-    proxy_timeout 24h;
+stream {
+    server {
+        listen 2096;
+        proxy_pass 10.88.88.2:2096;
+        proxy_timeout 24h;
+    }
 }
 EOF
 
