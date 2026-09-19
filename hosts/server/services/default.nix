@@ -13,5 +13,6 @@
     ./glance.nix
     ./netdata.nix
     ./hotel-vhost.nix
+    ./docs-vhost.nix
   ];
 }
