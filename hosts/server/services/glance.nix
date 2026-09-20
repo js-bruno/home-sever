@@ -2,7 +2,6 @@
 {
   services.glance = {
     enable = true;
-    openFirewall = true;
 
     settings = {
       server = {
@@ -166,8 +165,8 @@
                   title = "Serviços";
                   cache = "1m";
                   sites = [
-                    { title = "Netdata"; url = "http://192.168.15.50:19999"; }
-                    { title = "Paperless"; url = "http://192.168.15.50:28981"; }
+                    { title = "Netdata"; url = "http://netdata.thisdev.space"; }
+                    { title = "Paperless"; url = "http://paperless.thisdev.space"; }
                   ];
                 }
               ];

@@ -3,7 +3,7 @@
   services.paperless = {
     enable = true;
     consumptionDirIsPublic = true;
-    address = "0.0.0.0";
+    address = "127.0.0.1"; # só local — LAN entra pelo proxy reverso
     port = 28981;
     settings = {
       PAPERLESS_CONSUMER_IGNORE_PATTERN = [
@@ -15,8 +15,7 @@
         optimize = 1;
         pdfa_image_compression = "lossless";
       };
-      PAPERLESS_URL = "https://paperless.example.com";
+      PAPERLESS_URL = "http://paperless.thisdev.space";
     };
   };
 }
-
