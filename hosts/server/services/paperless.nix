@@ -15,7 +15,7 @@
         optimize = 1;
         pdfa_image_compression = "lossless";
       };
-      PAPERLESS_URL = "http://paperless.thisdev.space";
+      PAPERLESS_URL = "http://meupaperless.com";
     };
   };
 }

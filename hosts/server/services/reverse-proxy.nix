@@ -1,19 +1,16 @@
 # reverse-proxy.nix — proxy reverso LAN para os serviços HTTP do host
 #
-# Todos os serviços HTTP ganham um vhost próprio na porta 80, acessíveis só
-# pela LAN (192.168.15.0/24) + localhost. As portas diretas (8081/8082/19999/
-# 28981) foram fechadas no firewall — o único caminho de entrada é o nginx.
+# Hosts locais (resolvidos pelo dnsmasq do próprio servidor, ver dnsmasq.nix):
+#   meudocs.com        → Quartz (localhost:8080)
+#   meuglance.com      → Glance dashboard (localhost:8082)
+#   meunetdata.com     → Netdata (localhost:19999)
+#   meupaperless.com   → Paperless (localhost:28981)
 #
-# Hosts (resolver no cliente apontando para 192.168.15.50):
-#   docs.thisdev.space      → Quartz (localhost:8080)
-#   glance.thisdev.space    → Glance dashboard (localhost:8082)
-#   netdata.thisdev.space   → Netdata (localhost:19999)
-#   paperless.thisdev.space → Paperless (localhost:28981)
-#
-# O hotel (caravelho.com.br / hotel.thisdev.space) já vive na porta 80 via
-# módulo habbo-nixos + hotel-vhost.nix — intocados aqui. Portas TCP puras
-# (minecraft 25565, ssh 2222, mysql 3306, ws Nitro 2096, game 3000) continuam
-# diretas porque não são HTTP.
+# Todos restritos à LAN (192.168.15.0/24) + localhost. Os nomes *.thisdev.space
+# ficam só para o acesso público via VPS. O hotel (caravelho.com.br /
+# hotel.thisdev.space) já vive na porta 80 via módulo habbo-nixos +
+# hotel-vhost.nix — intocados aqui. Portas TCP puras (minecraft 25565, ssh
+# 2222, mysql 3306, ws Nitro 2096, game 3000) continuam diretas.
 
 { config, lib, ... }:
 let
@@ -25,7 +22,7 @@ let
 in
 {
   services.nginx.virtualHosts = {
-    "docs.thisdev.space" = {
+    "meudocs.com" = {
       locations."/" = {
         proxyPass = "http://127.0.0.1:8080";
         proxyWebsockets = true;
@@ -33,14 +30,14 @@ in
       };
     };
 
-    "glance.thisdev.space" = {
+    "meuglance.com" = {
       locations."/" = {
         proxyPass = "http://127.0.0.1:8082";
         extraConfig = lanOnly;
       };
     };
 
-    "netdata.thisdev.space" = {
+    "meunetdata.com" = {
       locations."/" = {
         proxyPass = "http://127.0.0.1:19999";
         proxyWebsockets = true;
@@ -48,7 +45,7 @@ in
       };
     };
 
-    "paperless.thisdev.space" = {
+    "meupaperless.com" = {
       locations."/" = {
         proxyPass = "http://127.0.0.1:28981";
         extraConfig = lanOnly;

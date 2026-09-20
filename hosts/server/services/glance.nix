@@ -165,8 +165,8 @@
                   title = "Serviços";
                   cache = "1m";
                   sites = [
-                    { title = "Netdata"; url = "http://netdata.thisdev.space"; }
-                    { title = "Paperless"; url = "http://paperless.thisdev.space"; }
+                    { title = "Netdata"; url = "http://meunetdata.com"; }
+                    { title = "Paperless"; url = "http://meupaperless.com"; }
                   ];
                 }
               ];

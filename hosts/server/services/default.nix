@@ -14,5 +14,6 @@
     ./netdata.nix
     ./hotel-vhost.nix
     ./reverse-proxy.nix
+    ./dnsmasq.nix
   ];
 }
