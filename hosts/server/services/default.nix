@@ -15,5 +15,6 @@
     ./hotel-vhost.nix
     ./reverse-proxy.nix
     ./dnsmasq.nix
+    ./excalidraw.nix
   ];
 }

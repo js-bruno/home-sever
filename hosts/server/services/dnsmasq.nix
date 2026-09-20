@@ -20,6 +20,7 @@
         "/meuglance.com/192.168.15.50"
         "/meunetdata.com/192.168.15.50"
         "/meupaperless.com/192.168.15.50"
+        "/meuexcalidraw.com/192.168.15.50"
       ];
     };
   };
