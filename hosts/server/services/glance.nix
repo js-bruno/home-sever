@@ -165,6 +165,9 @@
                   title = "Serviços";
                   cache = "1m";
                   sites = [
+                    { title = "Hotel Habbo"; url = "http://caravelho.com.br"; }
+                    { title = "Documentação (Quartz)"; url = "http://meudocs.com"; }
+                    { title = "Glance"; url = "http://meuglance.com"; }
                     { title = "Netdata"; url = "http://meunetdata.com"; }
                     { title = "Paperless"; url = "http://meupaperless.com"; }
                   ];
@@ -180,8 +183,13 @@
                     {
                       title = "Acesso rápido";
                       links = [
+                        { title = "Hotel Habbo"; url = "http://caravelho.com.br"; }
+                        { title = "Documentação"; url = "http://meudocs.com"; }
+                        { title = "Dashboards (Glance)"; url = "http://meuglance.com"; }
+                        { title = "Métricas (Netdata)"; url = "http://meunetdata.com"; }
+                        { title = "Documentos (Paperless)"; url = "http://meupaperless.com"; }
                         { title = "Minecraft"; url = "http://192.168.15.50:25565"; }
-                        { title = "SSH"; url = "ssh://gipsydanger@192.168.15.50:2222"; }
+                        { title = "SSH"; url = "ssh://***@192.168.15.50:2222"; }
                       ];
                     }
                   ];
