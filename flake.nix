@@ -9,7 +9,7 @@
     hermes-agent.url = "github:NousResearch/hermes-agent";
     nix-minecraft.url = "github:Infinidoge/nix-minecraft";
     nix-minecraft.inputs.nixpkgs.follows = "nixpkgs";
-    # Stack Habbo Retro (Arcturus + Atom CMS + Nitro client) como módulo NixOS
+
     habbo-nixos.url = "github:js-bruno/habbo-retro-nix";
     habbo-nixos.inputs.nixpkgs.follows = "nixpkgs";
   };

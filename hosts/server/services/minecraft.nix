@@ -1,6 +1,3 @@
-# minecraft-server.nix
-
-#
 # Como usar:
 #   1. Adicione ao seu flake.nix (veja flake-example.nix)
 #   2. Execute: nix run github:Infinidoge/nix-minecraft#nix-modrinth-prefetch -- <VERSION_ID>
@@ -9,7 +6,6 @@
 #
 # Para conectar ao console do servidor:
 #   tmux -S /run/minecraft/survival.sock attach
-#   (Ctrl+b, d para desconectar)
 
 { inputs, pkgs, lib, ... }:
 
@@ -90,15 +86,13 @@ collective = modrinthMod {
 
 in
 {
-  # ─── IMPORTAR MÓDULO DO NIX-MINECRAFT ───────────────────────────────────────
   imports = [ inputs.nix-minecraft.nixosModules.minecraft-servers ];
 
   nixpkgs.overlays = [ inputs.nix-minecraft.overlay ];
 
-  # ─── CONFIGURAÇÃO DO SERVIDOR ────────────────────────────────────────────────
   services.minecraft-servers = {
-    enable      = true;
-    eula        = true;        # Você concorda com a EULA da Mojang
+    enable      = false;
+    eula        = true;        # Você concorda com a EULA da Mojang :(
     openFirewall = true;       # Abre porta 25565 no firewall
 
     servers.survival = {
