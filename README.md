@@ -1,5 +1,9 @@
 # nix-config
 
+Computador cabuloso que eu comprei por 200 reais na olx
+
+[imagem]
+
 Configuração NixOS + home-manager para desktop e servidor, com módulos
 reutilizáveis (zsh, neovim, git, tmux).
 
