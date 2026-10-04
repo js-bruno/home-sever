@@ -4,7 +4,7 @@
 # habbo-nixos (ver flake.nix → nixosModules.habbo). Aqui ficam só os serviços
 # específicos do host que não fazem parte do módulo.
 
-{ inputs, ... }:
+{ config, lib, inputs, ... }:
 {
   imports = [
     ./ssh.nix
@@ -18,4 +18,10 @@
     ./excalidraw.nix
     ./service-metrics.nix
   ];
+
+  # ── Stack Habbo DESLIGADO (temporário) ────────────────────────────────────
+  # Religar: apagar estas 3 linhas (ou false→true) e rodar nixos-rebuild switch.
+  systemd.services.habbo-arcturus.enable = false;  # emulador Java (maior RAM)
+  systemd.services.mysql.enable          = false;  # MariaDB (só o habbo usa)
+  systemd.services.phpfpm-habbo.enable   = false;  # pool PHP do CMS
 }
