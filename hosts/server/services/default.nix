@@ -16,5 +16,6 @@
     ./reverse-proxy.nix
     ./dnsmasq.nix
     ./excalidraw.nix
+    ./service-metrics.nix
   ];
 }

@@ -35,7 +35,7 @@
                 }
                 {
                   type = "twitch-channels";
-                  channels = [ "zackrawrr" "theprimeagen" "kevinpowellcss" "j_blow" ];
+                  channels = [ "theprimeagen" "yulla" "surskity11" ];
                 }
               ];
             }
@@ -58,6 +58,11 @@
                   channels = [
                     # troque pelos IDs de canal que você acompanha
                     "UCXuqSBlHAE6Xw-yeJA0Tunw"  # Linus Tech Tips
+                    "UCEf5U1dB5a2e2S-XUlnhxSA"  # Diolinux
+                    "UCYVrkMZdrjq5eICOG6Rxiwg"  # Tecnologia e Classe (TeClas)
+                    "UCd3LVxg91E4vh4GqwKKfIKA"  # DioMagenta
+                    "UCfJN9ob8XWpvfLiD_uif0Lw"  # Semydeus
+                    "UC7aUVsRPKG4Ees4HHJvK8vw"  # Mistere
                   ];
                 }
                 {
@@ -102,53 +107,6 @@
           ];
         }
 
-        # ─── PÁGINA MARKETS ───
-        {
-          name = "Markets";
-          columns = [
-            {
-              size = "full";
-              widgets = [
-                {
-                  type = "markets";
-                  sort-by = "change";
-                  markets = [
-                    { symbol = "SPY"; name = "S&P 500"; }
-                    { symbol = "BTC-USD"; name = "Bitcoin"; }
-                    { symbol = "NVDA"; name = "NVIDIA"; }
-                    { symbol = "AAPL"; name = "Apple"; }
-                    { symbol = "MSFT"; name = "Microsoft"; }
-                    { symbol = "GOOGL"; name = "Google"; }
-                  ];
-                }
-              ];
-            }
-          ];
-        }
-
-        # ─── PÁGINA GAMING ───
-        {
-          name = "Gaming";
-          columns = [
-            {
-              size = "full";
-              widgets = [
-                { type = "reddit"; subreddit = "gaming"; collapse-after = 10; }
-              ];
-            }
-            {
-              size = "small";
-              widgets = [
-                {
-                  type = "twitch-top-games";
-                  limit = 10;
-                  collapse-after = 5;
-                }
-              ];
-            }
-          ];
-        }
-
         # ─── PÁGINA HOMELAB (seus serviços) ───
         {
           name = "Homelab";
@@ -168,10 +126,27 @@
                     { title = "Hotel Habbo"; url = "http://caravelho.com.br"; }
                     { title = "Documentação (Quartz)"; url = "http://meudocs.com"; }
                     { title = "Glance"; url = "http://meuglance.com"; }
-                    { title = "Netdata"; url = "http://meunetdata.com"; }
                     { title = "Paperless"; url = "http://meupaperless.com"; }
                     { title = "Excalidraw"; url = "http://meuexcalidraw.com"; }
                   ];
+                }
+                {
+                  type = "custom-api";
+                  title = "Métricas dos serviços";
+                  cache = "1m";
+                  url = "http://127.0.0.1:8090/metrics";
+                  template = ''
+                    <ul class="list list-gap-10">
+                    {{ range .JSON.Array "services" }}
+                      <li class="flex justify-between">
+                        <span class="size-h4">{{ .String "name" }}</span>
+                        <span class="size-h4 color-{{ if gt (.Float "cpu") 50 }}negative{{ else }}paragraph{{ end }}">
+                          CPU {{ .Float "cpu" | printf "%.1f" }}% · RAM {{ .Float "rss_mb" | printf "%.0f" }}MB
+                        </span>
+                      </li>
+                    {{ end }}
+                    </ul>
+                  '';
                 }
               ];
             }
@@ -187,7 +162,6 @@
                         { title = "Hotel Habbo"; url = "http://caravelho.com.br"; }
                         { title = "Documentação"; url = "http://meudocs.com"; }
                         { title = "Dashboards (Glance)"; url = "http://meuglance.com"; }
-                        { title = "Métricas (Netdata)"; url = "http://meunetdata.com"; }
                         { title = "Documentos (Paperless)"; url = "http://meupaperless.com"; }
                         { title = "Desenhos (Excalidraw)"; url = "http://meuexcalidraw.com"; }
                         { title = "Minecraft"; url = "http://192.168.15.50:25565"; }
