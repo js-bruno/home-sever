@@ -109,8 +109,8 @@ in
       #   8GB  RAM: "-Xms4G -Xmx6G"
       #   16GB RAM: "-Xms6G -Xmx12G"
       jvmOpts = lib.concatStringsSep " " [
-        "-Xms4G"
-        "-Xmx4G"
+        "-Xms6G"
+        "-Xmx6G"
         "-XX:+UseG1GC"
         "-XX:+ParallelRefProcEnabled"
         "-XX:MaxGCPauseMillis=200"
@@ -151,7 +151,9 @@ in
         # Mundo
         level-name               = "world";
         level-type               = "minecraft:default";
-        view-distance            = 15;
+        # Horizonte: view em 32 (máx) = ver o horizonte; simulation em 12
+        # para não derreter o TPS (o cliente também deve usar render 32).
+        view-distance            = 32;
         simulation-distance      = 12;
         # seed                   = "";   # Descomente e defina uma seed se quiser
 
