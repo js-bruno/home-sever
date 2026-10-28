@@ -19,8 +19,7 @@
     ./service-metrics.nix
   ];
 
-  # ── Stack Habbo DESLIGADO (temporário) ────────────────────────────────────
-  # Religar: apagar estas 3 linhas (ou false→true) e rodar nixos-rebuild switch.
+  # sudo systemctl stop minecraft-server-survival.service
   systemd.services.habbo-arcturus.enable = false;  # emulador Java (maior RAM)
   systemd.services.mysql.enable          = false;  # MariaDB (só o habbo usa)
   systemd.services.phpfpm-habbo.enable   = false;  # pool PHP do CMS

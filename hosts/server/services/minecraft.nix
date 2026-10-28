@@ -91,7 +91,7 @@ in
   nixpkgs.overlays = [ inputs.nix-minecraft.overlay ];
 
   services.minecraft-servers = {
-    enable      = true;
+    enable      = false; #TURN  OFF SERVER
     eula        = true;        # Você concorda com a EULA da Mojang :(
     openFirewall = true;       # Abre porta 25565 no firewall
 
