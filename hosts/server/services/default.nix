@@ -19,8 +19,4 @@
     ./service-metrics.nix
   ];
 
-  # sudo systemctl stop minecraft-server-survival.service
-  systemd.services.habbo-arcturus.enable = false;  # emulador Java (maior RAM)
-  systemd.services.mysql.enable          = false;  # MariaDB (só o habbo usa)
-  systemd.services.phpfpm-habbo.enable   = false;  # pool PHP do CMS
 }
