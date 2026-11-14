@@ -2,7 +2,7 @@
 #
 # Resolve os vhosts locais do proxy reverso para 192.168.15.50 e encaminha
 # todo o resto para os resolvers upstream (1.1.1.1 / 8.8.8.8). Os clientes da
-# LAN apontam o DNS para 192.168.15.50 e passam a resolver meudocs.com etc.
+# LAN apontam o DNS para 192.168.15.50 para resolver os nomes locais dos serviços.
 
 { config, lib, ... }:
 {
@@ -16,7 +16,6 @@
       no-resolv = true; # usa o server= abaixo, não /etc/resolv.conf
       server = [ "1.1.1.1" "8.8.8.8" ];
       address = [
-        "/meudocs.com/192.168.15.50"
         "/meuglance.com/192.168.15.50"
         "/meunetdata.com/192.168.15.50"
         "/meupaperless.com/192.168.15.50"

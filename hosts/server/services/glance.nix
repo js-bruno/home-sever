@@ -124,11 +124,40 @@
                   cache = "1m";
                   sites = [
                     { title = "Hotel Habbo"; url = "http://caravelho.com.br"; }
-                    { title = "Documentação (Quartz)"; url = "http://meudocs.com"; }
                     { title = "Glance"; url = "http://meuglance.com"; }
                     { title = "Paperless"; url = "http://meupaperless.com"; }
                     { title = "Excalidraw"; url = "http://meuexcalidraw.com"; }
                   ];
+                }
+                {
+                  type = "custom-api";
+                  title = "Vigia de serviços";
+                  cache = "30s";
+                  url = "http://127.0.0.1:8091/health";
+                  template = ''
+                    <p class="size-h4 {{ if eq (.JSON.String "status") "ok" }}color-positive{{ else if eq (.JSON.String "status") "fail" }}color-negative{{ else }}color-highlight{{ end }}">
+                      {{ .JSON.String "summary" }}
+                    </p>
+                    <ul class="list list-gap-10">
+                    {{ range .JSON.Array "checks" }}
+                      <li class="flex justify-between">
+                        <span class="size-h4">{{ .String "name" }}</span>
+                        <span class="size-h4 {{ if eq (.String "status") "ok" }}color-positive{{ else }}color-negative{{ end }}">{{ .String "value" }}</span>
+                      </li>
+                    {{ end }}
+                    </ul>
+                    {{ if .JSON.Array "audit" }}
+                    <p class="size-h4 color-highlight">Auditoria de configuração</p>
+                    <ul class="list list-gap-10">
+                    {{ range .JSON.Array "audit" }}
+                      <li class="flex justify-between">
+                        <span class="size-h4">{{ .String "name" }}</span>
+                        <span class="size-h4 color-highlight">{{ .String "value" }}</span>
+                      </li>
+                    {{ end }}
+                    </ul>
+                    {{ end }}
+                  '';
                 }
                 {
                   type = "custom-api";
@@ -160,7 +189,6 @@
                       title = "Acesso rápido";
                       links = [
                         { title = "Hotel Habbo"; url = "http://caravelho.com.br"; }
-                        { title = "Documentação"; url = "http://meudocs.com"; }
                         { title = "Dashboards (Glance)"; url = "http://meuglance.com"; }
                         { title = "Documentos (Paperless)"; url = "http://meupaperless.com"; }
                         { title = "Desenhos (Excalidraw)"; url = "http://meuexcalidraw.com"; }

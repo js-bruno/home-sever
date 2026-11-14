@@ -17,6 +17,7 @@
     ./dnsmasq.nix
     ./excalidraw.nix
     ./service-metrics.nix
+    ./service-watch.nix
   ];
 
 }

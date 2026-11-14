@@ -1,7 +1,6 @@
 # reverse-proxy.nix — proxy reverso LAN para os serviços HTTP do host
 #
 # Hosts locais (resolvidos pelo dnsmasq do próprio servidor, ver dnsmasq.nix):
-#   meudocs.com        → Quartz (localhost:8080)
 #   meuglance.com      → Glance dashboard (localhost:8082)
 #   meunetdata.com     → Netdata (localhost:19999)
 #   meupaperless.com   → Paperless (localhost:28981)
@@ -22,14 +21,6 @@ let
 in
 {
   services.nginx.virtualHosts = {
-    "meudocs.com" = {
-      locations."/" = {
-        proxyPass = "http://127.0.0.1:8080";
-        proxyWebsockets = true;
-        extraConfig = lanOnly;
-      };
-    };
-
     "meuglance.com" = {
       locations."/" = {
         proxyPass = "http://127.0.0.1:8082";
