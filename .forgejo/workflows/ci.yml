@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  eval:
+    runs-on: nixos
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Avaliar config do servidor
+        run: nix eval --raw .#nixosConfigurations.server.config.system.build.toplevel.drvPath
+
+  build:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: eval
+    runs-on: nixos
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build da config
+        run: nix build .#nixosConfigurations.server.config.system.build.toplevel --no-link --max-jobs 1

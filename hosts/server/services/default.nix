@@ -18,6 +18,7 @@
     ./excalidraw.nix
     ./service-metrics.nix
     ./service-watch.nix
+    ./forgejo.nix
   ];
 
 }
