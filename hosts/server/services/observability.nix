@@ -15,8 +15,9 @@
 #   sudo -u grafana grafana cli admin reset-admin-password NOVA_SENHA
 #
 # Acesso LAN: http://192.168.15.50:3002
-# O Grafana NÃO é exposto globalmente; 3002 está na lista LAN-only em
-# wireguard-vps.nix.
+# O Grafana NÃO é exposto globalmente: a 3002 é liberada só na interface da
+# LAN (enp3s0) no fim deste arquivo. Não usamos extraInputRules porque o
+# firewall roda no backend iptables, que ignora essa opção (nftables-only).
 
 { config, lib, pkgs, ... }:
 let
@@ -320,4 +321,8 @@ in
     MemoryHigh = "320M";
     MemoryMax = "512M";
   };
+
+  # Única alteração de rede: 3002 aceito na NIC da LAN, nada global.
+  # Gera `-i enp3s0 --dport 3002 ACCEPT` no backend iptables atual.
+  networking.firewall.interfaces.enp3s0.allowedTCPPorts = [ 3002 ];
 }

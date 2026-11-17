@@ -19,6 +19,7 @@
     ./service-metrics.nix
     ./service-watch.nix
     ./forgejo.nix
+    ./observability.nix
   ];
 
 }
